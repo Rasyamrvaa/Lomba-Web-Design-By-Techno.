@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/98472bec29.js" crossorigin="anonymous"></script>
+    <title>Document</title>
+</head>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        outline: none;
+        text-decoration: none;
+        font-family: 'Poppins', sans-serif;
+    }
+    body{
+        background-image: url(pexels-aarti-vijay-1207504-2693529.jpg);
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover; 
+    }
+    input[type="text"]{
+        background: transparent;
+        padding: 10px 20px;
+        border-style: none;
+        width: 50vh;
+    }
+    .pass{
+        -webkit-text-security: disc;
+        text-security: disc;
+    }
+    .box-input{
+        box-shadow: 0px 0px 2px rgba(255, 255, 255, 0.701);
+        border-radius: 24px;
+
+    }
+    .color::placeholder{
+        color: #fff;
+    }
+    .color{
+        caret-color: #e7e7e7;
+        color: #fff;
+    }
+    .main{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 80vh;
+        animation: slide-down 1s ease-out forwards;
+    }
+    @keyframes slide-down{
+        from{transform: translateY(-50%); opacity: 0;}
+        to{transform: translateY(0); opacity: 1;}
+    }
+    .sign-in, .log-in{
+        /* background-color: rgba(255, 255, 255, 0.452);  */
+        backdrop-filter: blur(3.5px);
+        box-shadow: 0px 0px 2px rgba(255, 255, 255, 0.701);
+        border-radius: 24px;
+        padding: 3vh;
+    }
+    .kolom-isi{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+    .judul{
+        font-size: larger;
+        font-weight: 800;
+        color: #fff;
+        text-align: center;
+        padding-bottom: 3vh;
+    }
+    .remember-forgot{
+        display: flex;
+        gap: 23vh;
+    }
+    label{
+        position: relative;
+        color: #fff;
+        cursor: pointer;
+    }
+    label input[type="checkbox"]{
+        position: absolute;
+        opacity: 0;
+    }
+    .remember{
+        position: relative;
+        display: inline-block;
+        top: 3px;
+        width: 15px;
+        height: 15px;
+        border: 2px solid #aacccc;
+        border-radius: 4px;
+        margin-right: 5px;
+        transition: .5s;
+    }
+    label input[type="checkbox"]:checked~.remember{
+        background-color: aquamarine;
+        border-color: aquamarine;
+    }
+    label{
+        font-size: 1.8vh;
+    }
+    .remember::before{
+        content: '';
+        position: absolute;
+        left: 2px;
+        top: 2.5px;
+        width: 7.5px;
+        height: 3px;
+        border-bottom: 2px solid #fff;
+        border-left: 2px solid #fff;
+        transform: scale(0) rotate(-45deg);
+        transition: .5s;
+    }
+    label input[type="checkbox"]:checked~.remember::before{
+        transform: scale(1) rotate(-45deg);
+    }
+    .forgot-text{   
+        color: #fff;
+        font-size: 1.8vh;
+    }
+    .forgot-text:hover{
+        text-decoration: underline;
+    }
+
+    button{
+        background: transparent;
+        border-style: none;
+        font-size: 2vh;
+        font-weight: 600;
+    }
+    .button{
+        width: 100%;
+        text-align: center;
+        background-color: #fff;
+        color: black;
+        font-weight: 600;
+        border-radius: 30px;
+        padding: 1vh 2vh;
+        transition: .5s;
+        cursor: pointer;
+    }
+    .button:hover{
+        background-color: #58b973;
+        color: #fff;
+        scale: 105%;
+    }
+
+    .or-lainnya{
+        justify-items: center;
+        padding-top: 2vh;
+        text-align: center;
+    }
+    .or-text{
+        color: #fff; 
+        font-size: 3vh; 
+        font-weight: 600;
+        width: 100%;
+    }
+    .pilihan{
+        display: flex;
+        gap: 5vh;
+        padding-top: 2vh;
+        padding-bottom: 2vh;
+    }
+    .pilihan-style{
+        border: 2px solid gray;
+        padding: 1vh;
+        border-radius: 10px;
+        font-size: 4vh;
+        color: #fff;
+        transition: .3s;
+        scale: 100%;
+        
+    }
+    .pilihan-style:hover{
+        background-color: #58b973;
+        scale: 110%;
+    }
+    .container-exit{
+        padding: 2vh;
+        display: flex;
+        justify-content: flex-end;
+    }
+    .button-exit{
+        animation: slide-down 1s ease-out forwards;
+        background-color: #58b973;
+        display: flex;
+        width: 15vh;
+        height: 8vh;
+        border-radius: 20px;
+        color: #fff;
+        font-weight: 600;
+        align-items: center;
+        justify-content: center;
+        transition: .3s;
+        scale: 100%;
+        gap: 2vh;
+    }
+    .button-exit:hover{
+        background-color: red;
+        scale: 110%;
+    }
+</style>
+</style>
+<body>
+    <section class="container-exit">
+        <a href="index.html" class="button-exit">Keluar
+            <i class="fa-solid fa-arrow-down fa-rotate-270 fa-lg" style="color: rgb(240, 240, 240);"></i>    
+        </a>
+    </section>
+    <section>
+        <div class="main">
+            <div class="sign-in">
+                <div class="judul" id="translate">
+                    REGISTRASI
+                </div>
+                <div class="kolom-isi">
+                    <div class="box-input">
+                        <input class="color" type="text" placeholder="Username">
+                            <i class="fa-solid fa-user" style="color: rgb(255, 255, 255); padding-right: 2vh;"></i>
+                        </div>
+                    <div class="box-input">
+                        <input class="color" type="text" placeholder="Email">
+                    <i class="fa-solid fa-envelope" style="color: rgb(255, 255, 255); padding-right: 2vh;"></i>
+                    </div>
+                    <div class="box-input">
+                        <input class="color pass" type="text" placeholder="Password">
+                        <i class="fa-solid fa-lock" style="color: rgb(255, 255, 255); padding-right: 2vh;"></i>
+                    </div>
+                    
+                    <div class="button">
+                        <button></button>Registrasi
+                    </div>
+                </div>
+                <div class="or-lainnya">
+                    <span class="or-text">atau</span>
+                    <div class="pilihan">
+                        <a href="">
+                            <i class="pilihan-style fa-brands fa-google" style="color: rgb(255, 255, 255);"></i>
+                        </a>
+                        <a href="">
+                            <i class="pilihan-style fa-brands fa-facebook" style="color: rgb(255, 255, 255);"></i>
+                        </a>
+                    </div>
+                    <span style="color: #fff; font-size: 1.8vh;">Sudah punya akun? <a href="log-in.html" class="forgot-text" style="font-weight: 600;">Masuk</a></span>
+                </div>
+                </div>
+        </div>
+    </section>
+</body>
+</html>

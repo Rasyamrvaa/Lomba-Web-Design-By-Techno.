@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mental Check</title>
+<style>
+body{font-family:Arial;background:#f5f7fb;padding:20px}
+.container{max-width:720px;margin:auto;background:#fff;padding:24px;border-radius:16px;box-shadow:0 8px 20px rgba(0,0,0,.1);overflow:hidden}
+.step,.loadingPage,.resultPage{display:none;opacity:0;transform:translateX(40px);transition:.35s}
+.active{display:block;opacity:1;transform:translateX(0)}
+.qb-opt{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;border:1px solid #ddd;margin:8px 0;cursor:pointer;transition:.2s}
+.qb-opt.picked{border-color:#4CAF50;background:#f0fff4}
+.qb-circle{width:18px;height:18px;border-radius:50%;border:2px solid #aaa;display:flex;align-items:center;justify-content:center}
+.qb-circle-inner{width:10px;height:10px;border-radius:50%;background:#4CAF50;display:none}
+.qb-opt.picked .qb-circle-inner{display:block}
+button{padding:10px 18px;border:none;border-radius:10px;background:#4CAF50;color:#fff;cursor:pointer}
+.nav{display:flex;justify-content:space-between;margin-top:10px}
+.progress{height:8px;background:#ddd;border-radius:10px;margin-bottom:15px;overflow:hidden}
+.progress-bar{height:100%;width:0;background:#4CAF50;transition:.3s}
+.center{text-align:center}
+.spinner{width:50px;height:50px;border:5px solid #ddd;border-top:5px solid #4CAF50;border-radius:50%;animation:spin 1s linear infinite;margin:20px auto}
+@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+.tag{padding:6px 10px;border-radius:20px;font-size:13px;margin-right:6px}
+.tag-teal{background:#e0fff4}
+.tag-coral{background:#ffe0e0}
+.tag-violet{background:#e0e7ff}
+button{transition:all .2s ease}
+button:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 6px 14px rgba(0,0,0,.15)}
+button:active{transform:scale(0.97);box-shadow:0 2px 6px rgba(0,0,0,.2)}
+
+.qb-opt{transition:all .2s ease}
+.qb-opt:hover{transform:scale(1.02);box-shadow:0 4px 10px rgba(0,0,0,.1)}
+.qb-opt:active{transform:scale(0.98)}
+
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Cek Kondisi Harian</h1>
+<div class="progress"><div id="qbFill" class="progress-bar"></div></div>
+
+<div id="quizBox" class="step active">
+<h3 id="qbStep"></h3>
+<p id="qbQ"></p>
+<div id="qbOpts"></div>
+<div class="nav">
+<button id="qbBack" onclick="qBack()">⬅</button>
+<button id="qbNext" onclick="qNext()">Lanjut →</button>
+</div>
+</div>
+
+<div id="loadingPage" class="loadingPage center">
+<h3>Memproses hasil...</h3>
+<div class="spinner"></div>
+<p>Tunggu sebentar ya</p>
+</div>
+
+<div id="resultBox" class="resultPage">
+<h2 id="rTi"></h2>
+<p id="rMg"></p>
+<p id="rML"></p>
+<div style="background:#ddd;height:8px;border-radius:10px;overflow:hidden">
+<div id="rMF" style="height:100%;width:0"></div>
+</div>
+<div id="rTg" style="margin-top:10px"></div>
+<br>
+<button onclick="resetQ()">🔄 Ulangi</button>
+</div>
+
+</div>
+
+<script>
+const QS=[
+{q:"Gimana perasaanmu hari ini?",opts:[{l:"😄 Sangat Baik",s:5},{l:"🙂 Baik",s:4},{l:"😐 Biasa saja",s:3},{l:"😕 Kurang baik",s:2},{l:"😢 Sedih",s:1}]},
+{q:"Berapa jam kamu tidur semalam?",opts:[{l:"7 jam",s:5},{l:"5-7 jam",s:3},{l:"<5 jam",s:1}]},
+{q:"Apakah tidurmu terasa berkualitas?",opts:[{l:"Ya",s:5},{l:"Lumayan",s:3},{l:"Tidak",s:1}]},
+{q:"Seberapa produktif kamu hari ini?",opts:[{l:"Sangat produktif",s:5},{l:"Lumayan",s:3},{l:"Tidak sama sekali",s:1}]},
+{q:"Apakah kamu menyelesaikan hal penting hari ini?",opts:[{l:"Ya",s:5},{l:"Sebagian",s:3},{l:"Tidak",s:1}]},
+{q:"Hari ini kamu berinteraksi dengan orang lain?",opts:[{l:"Banyak & menyenangkan",s:5},{l:"Sedikit",s:3},{l:"Tidak sama sekali",s:1}]},
+{q:"Seberapa sering kamu overthinking hari ini?",opts:[{l:"Tidak sama sekali",s:5},{l:"Kadang",s:3},{l:"Sering",s:1}]},
+{q:"Apakah ada hal yang membuatmu stres hari ini?",opts:[{l:"Tidak",s:5},{l:"Sedikit",s:3},{l:"Banyak",s:1}]}
+];
+
+let qi=0,qa=[],qs=[];
+
+function renderQ(){
+const q=QS[qi];
+document.getElementById('qbStep').textContent=`Pertanyaan ${qi+1} dari ${QS.length}`;
+document.getElementById('qbFill').style.width=`${((qi+1)/QS.length)*100}%`;
+document.getElementById('qbQ').textContent=q.q;
+document.getElementById('qbBack').style.display=qi>0?'block':'none';
+const oe=document.getElementById('qbOpts');oe.innerHTML='';
+q.opts.forEach((o,i)=>{
+const d=document.createElement('div');
+d.className='qb-opt'+(qa[qi]===i?' picked':'');
+d.innerHTML=`<div class="qb-circle"><div class="qb-circle-inner"></div></div><span>${o.l}</span>`;
+d.onclick=()=>{qa[qi]=i;qs[qi]=o.s;renderQ();};
+oe.appendChild(d);
+});
+}
+
+function qNext(){
+if(qa[qi]===undefined){alert('Pilih jawaban dulu');return}
+if(qi<QS.length-1){qi++;renderQ();}else{showLoading();}
+}
+
+function qBack(){if(qi>0){qi--;renderQ();}}
+
+function showLoading(){
+document.getElementById('quizBox').style.display='none';
+document.getElementById('loadingPage').classList.add('active');
+setTimeout(()=>{document.getElementById('loadingPage').classList.remove('active');showResult();},1500);
+}
+
+function showResult(){
+const total=qs.reduce((a,b)=>a+b,0);
+const max=QS.reduce((sum,q)=>sum+Math.max(...q.opts.map(o=>o.s)),0);
+const percent=Math.round((total/max)*100);
+let title,msg,tags,color;
+if(percent>=80){title='Kondisi sangat baik';msg='Kamu dalam kondisi yang sangat positif hari ini.';tags=[['✨ Prima','tag-teal'],['🔥 Energi Tinggi','tag-teal']];color='#4CAF50'}
+else if(percent>=60){title='Kondisi cukup baik';msg='Masih stabil, jaga kebiasaan baikmu.';tags=[['🌱 Stabil','tag-teal'],['😊 Konsisten','tag-teal']];color='#4CAF50'}
+else if(percent>=50){title='Perlu perhatian ringan';msg='Ada beberapa hal kecil yang perlu dijaga.';tags=[['⚠️ Perhatian','tag-coral']];color='#f4c542'}
+else{title='Perlu perhatian lebih';msg='Kamu mungkin sedang mengalami hari yang berat, tidak apa-apa.';tags=[['🤝 Dukungan','tag-coral'],['🧘 Relaksasi','tag-teal'],['💬 Konselor','tag-violet']];color='#ff6b6b'}
+
+document.getElementById('rTi').textContent=title;
+document.getElementById('rMg').textContent=msg;
+document.getElementById('rML').textContent='Skor: '+percent+'%';
+const bar=document.getElementById('rMF');bar.style.background=color;setTimeout(()=>{bar.style.width=percent+'%';},200);
+document.getElementById('rTg').innerHTML=tags.map(t=>`<span class="tag ${t[1]}">${t[0]}</span>`).join('');
+
+document.getElementById('resultBox').classList.add('active');
+}
+
+function resetQ(){qi=0;qa=[];qs=[];document.getElementById('resultBox').classList.remove('active');document.getElementById('quizBox').style.display='block';renderQ();}
+
+renderQ();
+</script>
+</body>
+</html>
