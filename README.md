@@ -1,2 +1,2 @@
 # LOMBA WEB DESIGN TECHNO 2026
-Repository untuk lomba web design TECHNO 2026
+Ini adalah sebuah rancangan untuk pembuatan sebuah website orzscratch. Akan tetapi admin mengalami trouble pada saat ini, yaitu file readme yang sudah admin tulis, dan sudah admin gabungkan dengan file-file pendukung lainnya, sudah hilang, maka dari itu mungkin rancangan tentang pembuatan web ini, belum ada/kemungkinan tidak ada, karena admin sendiri tidak ingat tentang semua pendukung/elemen yang ada di website ini, dan FYI admin hanya tidak ikut 100% pembuatan web ini, karena di perlombaan kali ini, format pengerjaannya adalah tim.
